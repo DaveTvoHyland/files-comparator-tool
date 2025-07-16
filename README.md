@@ -55,7 +55,7 @@ python files_migration_comparator.py
 
 - Build the Executable
 From the same folder as your script:
-'pyinstaller --onefile --windowed files_migration_comparator.py'
+'pyinstaller --onefile --windowed file_migration_comparator.py'
 - Find Your Executable
 Your .exe will be in the dist/ folder:
-dist/files_migration_comparator.exe
+dist/file_migration_comparator.exe

@@ -78,33 +78,30 @@ def generate_report(base_dir, search_dir, output_file):
             rel_path = base_file.relative_to(base_dir)
             search_file = find_matching_file(search_dir, rel_path)
 
-            section = [f"<details><summary>{escape(str(rel_path))}</summary>"]
-
             if not search_file or not search_file.exists():
-                section.append("<p style='color:red;'>Missing in Search Folder.</p></details>")
-                report_body.append(''.join(section))
                 missing_file_paths.append(str(rel_path))
                 missing_files += 1
                 continue
 
             try:
                 with open(base_file, 'r', encoding='utf-8', errors='ignore') as f1, \
-                     open(search_file, 'r', encoding='utf-8', errors='ignore') as f2:
+                    open(search_file, 'r', encoding='utf-8', errors='ignore') as f2:
                     base_lines = f1.readlines()
                     search_lines = f2.readlines()
 
                 if base_lines == search_lines:
-                    section.append("<p style='color:green;'>No changes.</p></details>")
                     unchanged_file_paths.append(str(rel_path))
                     matched_files += 1
                 else:
+                    section = [f"<details><summary>{escape(str(rel_path))}</summary>"]
                     diff_html = generate_side_by_side_diff(base_lines, search_lines)
                     section.append(diff_html + "</details>")
+                    report_body.append('\n'.join(section))
                     changed_files += 1
             except Exception as e:
+                section = [f"<details><summary>{escape(str(rel_path))}</summary>"]
                 section.append(f"<p>Error comparing file {rel_path}: {str(e)}</p></details>")
-
-            report_body.append('\n'.join(section))
+                report_body.append('\n'.join(section))
 
     # Summary block
     report.append("<h2>Summary</h2>")
